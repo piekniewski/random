@@ -74,7 +74,6 @@ class TmobileHomeInternetGateway(object):
         response1 = self.http.post("http://192.168.12.1/TMI/v1/gateway/reset?set=reboot")
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     TM = TmobileHomeInternetGateway()
     print(TM.login("admin", "secret_password"))
