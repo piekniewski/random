@@ -11,7 +11,7 @@ class TmobileHomeInternetGateway(object):
 
     def login(self, username, password):
         body = {"username": username, "password": password}
-        response = requests.post("http://192.168.12.1/TMI/v1/auth/login", json=body)
+        response = requests.post(f"http://{self.address}/TMI/v1/auth/login", json=body)
         if response.status_code == 401:
             print(response.json()["result"]["error"])
             print(response.json()["result"]["message"])
@@ -35,7 +35,7 @@ class TmobileHomeInternetGateway(object):
 
     def get_network_settings(self):
         self.__check_login()
-        response = self.http.get("http://192.168.12.1/TMI/v1/network/configuration?get=ap")
+        response = self.http.get(f"http://{self.address}/TMI/v1/network/configuration?get=ap")
         if response.status_code == 200:
             return response.json()
 
@@ -44,7 +44,7 @@ class TmobileHomeInternetGateway(object):
         properties["2.4ghz"]["isRadioEnabled"] = False
         properties["5.0ghz"]["isRadioEnabled"] = False
         try:
-            response1 = self.http.post("http://192.168.12.1/TMI/v1/network/configuration?set=ap", json=properties, timeout=1.5)
+            response1 = self.http.post(f"http://{self.address}/TMI/v1/network/configuration?set=ap", json=properties, timeout=1.5)
         except requests.exceptions.ReadTimeout:
             print("Post request timed out but this is most likely fine as it probably disabled Wifi")
             return
@@ -56,7 +56,7 @@ class TmobileHomeInternetGateway(object):
         properties["2.4ghz"]["isRadioEnabled"] = True
         properties["5.0ghz"]["isRadioEnabled"] = True
         try:
-            response1 = self.http.post("http://192.168.12.1/TMI/v1/network/configuration?set=ap", json=properties, timeout=1.5)
+            response1 = self.http.post(f"http://{self.address}/TMI/v1/network/configuration?set=ap", json=properties, timeout=1.5)
         except requests.exceptions.ReadTimeout:
             print("Post request timed out but this is most likely fine as it probably enabled Wifi")
             return
@@ -65,13 +65,13 @@ class TmobileHomeInternetGateway(object):
 
     def get_connection_status(self):
         self.__check_login()
-        response = self.http.get("http://192.168.12.1/TMI/v1/gateway?get=all")
+        response = self.http.get(f"http://{self.address}/TMI/v1/gateway?get=all")
         if response.status_code == 200:
             return response.json()
 
     def reboot(self):
         self.__check_login()
-        response1 = self.http.post("http://192.168.12.1/TMI/v1/gateway/reset?set=reboot")
+        response1 = self.http.post(f"http://{self.address}/TMI/v1/gateway/reset?set=reboot")
 
 
 if __name__ == '__main__':
